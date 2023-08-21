@@ -1,0 +1,85 @@
+{
+  "hash": "5e851a215dea55f7a13b",
+  "publicPath": "/",
+  "outputPath": "C:\\Users\\peace\\source\\peacepiece\\react-webpack-server-2\\dist",
+  "assetsByChunkName": {
+    "main": [
+      "main.css",
+      "main.js"
+    ]
+  },
+  "assets": [
+    {
+      "type": "asset",
+      "name": "main.js",
+      "size": 3041820,
+      "emitted": false,
+      "comparedForEmit": false,
+      "cached": true,
+      "info": {
+        "javascriptModule": false
+      },
+      "chunkNames": [
+        "main"
+      ],
+      "chunkIdHints": [],
+      "auxiliaryChunkNames": [],
+      "auxiliaryChunkIdHints": [],
+      "chunks": [
+        "main"
+      ],
+      "auxiliaryChunks": []
+    },
+    {
+      "type": "asset",
+      "name": "main.css",
+      "size": 16250,
+      "emitted": false,
+      "comparedForEmit": false,
+      "cached": true,
+      "info": {},
+      "chunkNames": [
+        "main"
+      ],
+      "chunkIdHints": [],
+      "auxiliaryChunkNames": [],
+      "auxiliaryChunkIdHints": [],
+      "chunks": [
+        "main"
+      ],
+      "auxiliaryChunks": []
+    }
+  ],
+  "namedChunkGroups": {
+    "main": {
+      "name": "main",
+      "chunks": [
+        "main"
+      ],
+      "assets": [
+        {
+          "name": "main.css"
+        },
+        {
+          "name": "main.js"
+        }
+      ],
+      "filteredAssets": 0,
+      "assetsSize": null,
+      "filteredAuxiliaryAssets": 0,
+      "auxiliaryAssetsSize": 0,
+      "children": {},
+      "childAssets": {}
+    }
+  },
+  "generator": "loadable-components",
+  "chunks": [
+    {
+      "id": "main",
+      "files": [
+        "main.css",
+        "main.js"
+      ]
+    }
+  ]
+}

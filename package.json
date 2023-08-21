@@ -1,0 +1,52 @@
+{
+  "scripts": {
+    "ts": "tsc",
+    "watch:server": "webpack --config webpack.server.config.js --mode development --watch",
+    "watch:client": "webpack --config webpack.source.config.js --mode development --watch",
+    "build": "webpack --config webpack.server.config.js --mode production && webpack --config webpack.source.config.js --mode production",
+    "dev:node": "nodemon --watch ./dist ./dist/index.js",
+    "dev": "pm2 start ./ecosystem.config.js --only dev-server --env development",
+    "start": "pm2 start ./ecosystem.config.js --only prod-server --env production",
+    "del": "pm2 del all"
+  },
+  "dependencies": {
+    "@loadable/component": "^5.15.3",
+    "@loadable/server": "^5.16.1",
+    "axios": "^1.4.0",
+    "compression": "^1.7.4",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "loadable": "^1.0.0",
+    "node-self": "^1.0.2",
+    "nodemon": "^3.0.1",
+    "pm2": "^5.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.14.2",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-react": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
+    "@loadable/babel-plugin": "^5.16.1",
+    "@loadable/webpack-plugin": "^5.15.2",
+    "@types/compression": "^1.7.2",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
+    "autoprefixer": "^10.4.15",
+    "babel-loader": "^9.1.3",
+    "babel-preset-react-app": "^10.0.1",
+    "css-loader": "^6.8.1",
+    "mini-css-extract-plugin": "^2.7.6",
+    "postcss-loader": "^7.3.3",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.4.4",
+    "webpack-cli": "^5.1.4",
+    "webpack-node-externals": "^3.0.0"
+  }
+}
