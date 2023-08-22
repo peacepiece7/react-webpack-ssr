@@ -22,11 +22,9 @@ export default async function renderHome(url: string, req: Request, res: Respons
 
   // todo : RSC 전략 필요 (클라이언트에서 하이드레이션 막아야함..)
   const postPromise = new Promise((res) => {
-    console.log('HOME PAGE : 3초 뒤 API를 요청합니다.')
     setTimeout(() => {
       res(
         axios.get(`https://jsonplaceholder.typicode.com/posts/1`).then(({ data }) => {
-          console.log('HOME PAGE : 데이터를 반환합니다. Suspense가 Resolve됩니다.')
           return {
             ...data,
             isServer: true,
@@ -122,7 +120,3 @@ export default async function renderHome(url: string, req: Request, res: Respons
   // 충분한 시간이(현제 10초) 지나면 SSR을 포기하고 CSR으로 전환합니다.
   setTimeout(() => stream.abort(), ABORT_DELAY)
 }
-
-// * Example API URL
-// https://jsonplaceholder.typicode.com/comments?postId=${postNumber}
-// https://jsonplaceholder.typicode.com/posts/${postNumber}

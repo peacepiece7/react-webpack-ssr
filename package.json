@@ -4,8 +4,8 @@
     "watch:server": "webpack --config webpack.server.config.js --mode development --watch",
     "watch:client": "webpack --config webpack.source.config.js --mode development --watch",
     "build": "webpack --config webpack.server.config.js --mode production && webpack --config webpack.source.config.js --mode production",
-    "dev:node": "nodemon --watch ./dist ./dist/index.js",
-    "dev": "pm2 start ./ecosystem.config.js --only dev-server --env development",
+    "dev": "nodemon --watch ./dist ./dist/index.js",
+    "dev:pm2": "pm2 start ./ecosystem.config.js --only dev-server --env development",
     "start": "pm2 start ./ecosystem.config.js --only prod-server --env production",
     "del": "pm2 del all"
   },
