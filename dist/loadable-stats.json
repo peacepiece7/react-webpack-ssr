@@ -1,7 +1,7 @@
 {
-  "hash": "5e851a215dea55f7a13b",
+  "hash": "9df4121455ce1ea758d9",
   "publicPath": "/",
-  "outputPath": "C:\\Users\\peace\\source\\peacepiece\\react-webpack-server-2\\dist",
+  "outputPath": "C:\\Users\\peace\\source\\peacepiece\\react-webpack-ssr\\dist",
   "assetsByChunkName": {
     "main": [
       "main.css",
@@ -12,7 +12,7 @@
     {
       "type": "asset",
       "name": "main.js",
-      "size": 3041820,
+      "size": 3862061,
       "emitted": false,
       "comparedForEmit": false,
       "cached": true,

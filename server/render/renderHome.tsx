@@ -4,7 +4,7 @@ import React from 'react'
 
 import { renderToPipeableStream, renderToReadableStream } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom/server'
-import { ABORT_DELAY } from '../../constants'
+import { ABORT_DELAY, HOME_API_KEY, HOME_RPOMISE_API_KEY } from '../../constants'
 import { wrapPromise } from '../../utils'
 
 import App from '../../src/App'
@@ -20,6 +20,7 @@ export default async function renderHome(url: string, req: Request, res: Respons
     'main.css': '/main.css',
   }
 
+  // todo : RSC 전략 필요 (클라이언트에서 하이드레이션 막아야함..)
   const postPromise = new Promise((res) => {
     console.log('HOME PAGE : 3초 뒤 API를 요청합니다.')
     setTimeout(() => {
@@ -35,14 +36,31 @@ export default async function renderHome(url: string, req: Request, res: Respons
     }, 8000)
   })
 
-  const data = {
-    data: wrapPromise(postPromise),
-  }
+  const homeData: { title: string; description: string } = await new Promise((res) => {
+    setTimeout(() => {
+      const homeData = {
+        title: 'Check the page source in your browser!',
+        description: 'this code show you how to use react server side rendering',
+        test: {
+          foo: {
+            bar: 'waldo',
+          },
+        },
+      }
+      return res(homeData)
+    }, 100)
+  })
+  let serverSideData: {
+    [key: string]: unknown
+  } = {}
+  serverSideData[HOME_API_KEY] = JSON.stringify(homeData)
+  serverSideData[HOME_RPOMISE_API_KEY] = wrapPromise(postPromise)
 
+  // todo : crawler 처리
   let isCrawler = false
 
   const stream = renderToPipeableStream(
-    <SSRProvider data={data}>
+    <SSRProvider data={serverSideData}>
       <html lang="en">
         <head>
           <meta charSet="utf-8" />
@@ -63,6 +81,11 @@ export default async function renderHome(url: string, req: Request, res: Respons
               __html: `assetManifest = ${JSON.stringify(assets)};`,
             }}
           />
+          {(serverSideData as object) && (
+            <script id="__SERVER_DATA__" type="application/json">
+              {JSON.stringify(serverSideData)}
+            </script>
+          )}
         </body>
         <div id="root">
           <StaticRouter location={url}>
