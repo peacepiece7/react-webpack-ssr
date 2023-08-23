@@ -31,7 +31,7 @@ export default async function renderHome(url: string, req: Request, res: Respons
           }
         }),
       )
-    }, 8000)
+    }, ABORT_DELAY - 1000)
   })
 
   const homeData: { title: string; description: string } = await new Promise((res) => {

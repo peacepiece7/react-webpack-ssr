@@ -14,8 +14,8 @@ type PostPromise = {
 export default function useServerSide() {
   const ctx = useContext(ServerSideContext)
   const serverData = ctx[HOME_RPOMISE_API_KEY] as PostPromise
-  if (typeof document === 'undefined' && serverData) {
-    serverData.read()
+  if (typeof window === 'undefined') {
+    return serverData.read()
   }
   return dummyData
 }

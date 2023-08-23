@@ -51,5 +51,3 @@ Webpack Hot Module Replacement를 구현하지 않았습니다.
 에러 핸들링을 위해 최대한 webpack을 쪼개놨습니다.
 
 개발 시 프로세스를 최소 3개나 띄워야하는 불편함이 있습니다.
-
-# 참고
