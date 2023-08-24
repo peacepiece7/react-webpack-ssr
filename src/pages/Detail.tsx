@@ -1,10 +1,9 @@
-import React, { Suspense } from 'react'
-import Post from '../components/Post'
+import React, { useState } from 'react'
 import SSRPost from '../components/SSRPost'
 import { HOME_API_KEY } from '../../constants'
 
 export default function Detail() {
-  const [count, setCount] = React.useState(0)
+  const [count, setCount] = useState(0)
 
   return (
     <>
@@ -26,9 +25,6 @@ export default function Detail() {
       </section>
       <section>
         <h1 className="text-3xl">Server Component</h1>
-        <Suspense fallback={<div className="text-3xl text-rose-500">포스트 데이터를 가져오고 있는 중입니다...</div>}>
-          <Post />
-        </Suspense>
       </section>
     </>
   )

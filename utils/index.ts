@@ -52,13 +52,11 @@ export function wrapPromise(promise: Promise<unknown>) {
 
   const suspender = promise.then(
     (res) => {
-      console.log('Suspender Success :')
       status = 'success'
       response = res
     },
     // rejected case
     (err) => {
-      console.log('Suspender Rejected :')
       status = 'error'
       response = err
     },

@@ -5,10 +5,13 @@ import { hydrateRoot } from 'react-dom/client'
 import App from './App'
 
 import './tailwind.css'
+import { loadableReady } from '@loadable/component'
 
-hydrateRoot(
-  document.getElementById('root') as HTMLDivElement,
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
-)
+loadableReady(() => {
+  hydrateRoot(
+    document.getElementById('root') as HTMLDivElement,
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>,
+  )
+})

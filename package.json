@@ -1,9 +1,11 @@
 {
   "scripts": {
-    "ts": "tsc",
-    "watch:server": "webpack --config webpack.server.config.js --mode development --watch",
-    "watch:client": "webpack --config webpack.source.config.js --mode development --watch",
-    "build": "webpack --config webpack.server.config.js --mode production && webpack --config webpack.source.config.js --mode production",
+    "build:dev:server": "webpack --config webpack.server.config.js --mode development --progress --profile",
+    "build:dev:client": "webpack --config webpack.client.config.js --mode development --progress --profile",
+    "build:dev": "npm run build:dev:client && npm run build:dev:server",
+    "build:prod:server": "webpack --config webpack.server.config.js --mode production --progress --profile",
+    "build:prod:client": "webpack --config webpack.client.config.js --mode production --progress --profile",
+    "build:prod": "npm run build:prod:client && npm run build:prod:server",
     "dev": "nodemon --watch ./dist ./dist/index.js",
     "dev:pm2": "pm2 start ./ecosystem.config.js --only dev-server --env development",
     "start": "pm2 start ./ecosystem.config.js --only prod-server --env production",
@@ -25,6 +27,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",
+    "rimraf": "^5.0.1",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.1.6",
     "webpack": "^5.88.2"

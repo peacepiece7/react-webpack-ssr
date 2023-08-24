@@ -1,6 +1,7 @@
 import express from 'express'
 import compress from 'compression'
 import rootRouter from './route/root'
+import renderHome from './render/renderHome'
 
 // ! 포트번호 코드 webpack.config.js와 중복됨!
 const PORT = process.env.PORT || 4000
@@ -11,7 +12,9 @@ app.use(express.static('public'))
 app.use(express.static('dist'))
 
 // * Home 페이지로 이동합니다.
-app.use('/', rootRouter)
+app.use('/', (req, res) => {
+  renderHome(req.url, req, res)
+})
 
 app
   .listen(PORT, () => {
