@@ -24,10 +24,12 @@ export async function waitForWebpack(buildFilePath: string) {
     }
   }
 }
-
 // Simulate a delay caused by data fetching.
 // We fake this because the streaming HTML renderer
-// ! is not yet integrated with real data fetching strategies. <== 부분 적용이면 직접 구현 해볼 순 없을까..? Next 13.4도 있는데..?
+// is not yet integrated with real data fetching strategies.
+/**
+ * @description RSC 만들 때 Suspense를 사용하기 위한 코드
+ */
 export function createServerData() {
   let done = false
   let promise: Promise<unknown> | null = null
@@ -46,25 +48,23 @@ export function createServerData() {
     },
   }
 }
-
+/**
+ * @description RSC 만들 때 Suspense를 사용하기 위한 코드
+ */
 export function wrapPromise(promise: Promise<unknown>) {
   let status: 'success' | 'pending' | 'error' = 'pending'
   let response: unknown
 
   const suspender = promise.then(
     (res) => {
-      console.log('Suspense Success')
       status = 'success'
       response = res
     },
-    // rejected case
     (err) => {
-      console.log('Suspense Failure')
       status = 'error'
       response = err
     },
   )
-
   const read = () => {
     switch (status) {
       case 'pending':
@@ -75,12 +75,10 @@ export function wrapPromise(promise: Promise<unknown>) {
         return response
     }
   }
-
   return { read }
 }
 
 /**
- *
  * @description ref suspender 만들 때 참고하기 위한 코드
  * @example
  * initialStatePromiseRef.current.promise.resolve(initialData);
@@ -99,7 +97,6 @@ export const resolvablePromise = () => {
   return promise
 }
 
-// * string to string[]
 export const normalizeAssets = <T extends string | string[]>(assets: T): string[] => {
   if (isObject(assets)) {
     return Object.values(assets)

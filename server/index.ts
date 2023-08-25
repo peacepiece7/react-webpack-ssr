@@ -3,8 +3,7 @@ import compress from 'compression'
 import path from 'path'
 import renderHome from './render/renderHome'
 
-// ! 포트번호 코드 webpack.config.js와 중복됨!
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 7282
 const app = express()
 console.log('실행 환경 체크 : ', process.env.NODE_ENV)
 

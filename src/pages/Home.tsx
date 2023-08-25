@@ -8,8 +8,8 @@ export default function Home() {
   return (
     <>
       <div className="flex">
-        <h1>Home Page</h1>
-        <h1 className="text-red-700">Count : {count}</h1>
+        <h1 className="title">Home Page</h1>
+        <h1 className="text-blue-300">Count : {count}</h1>
         <div>
           <button
             className="mr-12"

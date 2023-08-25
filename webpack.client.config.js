@@ -9,7 +9,6 @@ const hotMiddlewareScript = `webpack-hot-middleware/client?name=web&log=false&re
 
 const getEntryPoint = (target) => {
   if (target === 'node') {
-    // index.tsx or App.tsx?
     return ['./src/index.tsx']
   }
   return devMode ? [hotMiddlewareScript, './src/index.tsx'] : ['./src/index.tsx']
@@ -32,7 +31,7 @@ const getConfig = (target) => {
         {
           test: /\.css?$/,
           exclude: [],
-          use: [devMode ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+          use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
         },
         {
           test: /\.jsx?$|\.tsx?$/,
@@ -49,7 +48,6 @@ const getConfig = (target) => {
         : [new LoadablePlugin(), new MiniCssExtractPlugin()],
 
     // node환경에서 npm pacakge는 제외하지만, node_modules/@loadable/component는 서버에서 사용되기 때문에 제외하지 않음
-    // todo : web에서 webpackNodeExternals()를 사용할 경우 파일용량 확인하기
     externals: target === 'node' ? ['@loadable/component', webpackNodeExternals()] : undefined,
   }
 }
