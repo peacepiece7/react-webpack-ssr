@@ -1,6 +1,5 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-
 import { hydrateRoot } from 'react-dom/client'
 import App from './App'
 
@@ -16,8 +15,9 @@ loadableReady(() => {
   )
 })
 
+// https://webpack.kr/api/hot-module-replacement/
 if (module.hot) {
-  if (process.env.NODE_ENV === 'development') {
-    document.querySelector('#root > *')?.remove()
-  }
+  module.hot.accept()
+  document.querySelector('#root > *')?.remove()
+  // if (process.env.NODE_ENV === 'development') {}
 }

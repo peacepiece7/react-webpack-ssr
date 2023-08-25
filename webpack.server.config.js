@@ -6,7 +6,7 @@ module.exports = (e, r) => {
     target: 'node',
     node: false, // it enables '__dirname' in files. If is not, '__dirname' always return '/'.
     mode: r.mode,
-    devtool: r.mode ? false : 'inline-source-map',
+    devtool: r.mode === 'production' ? false : 'inline-source-map',
     entry: {
       index: path.resolve(__dirname, 'server', 'index.ts'),
     },
@@ -28,4 +28,15 @@ module.exports = (e, r) => {
     },
     externals: [webpackNodeExternals()],
   }
+}
+const r = {
+  entry: {
+    index: path.resolve(__dirname, 'server', 'index.ts'),
+  },
+  output: {
+    path: path.resolve(__dirname, './dist'),
+    filename: '[name].js',
+    chunkFilename: '[name].js',
+  },
+  externals: [webpackNodeExternals()],
 }

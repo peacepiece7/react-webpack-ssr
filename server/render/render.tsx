@@ -5,7 +5,7 @@ import { ChunkExtractor } from '@loadable/server'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom/server'
 import { Helmet } from 'react-helmet'
-import { HOME_API_KEY, SEO } from '../../constants'
+import { POST_API_KEY, SEO } from '../../constants'
 import App from '../../src/App'
 import { SSRProvider } from '../../src/context/ssr'
 
@@ -17,13 +17,13 @@ export default async function renderHome(url: string, req: Request, res: Respons
   const data: { title: string; description: string } = await new Promise((res) => {
     setTimeout(() => {
       const response = {
-        title: '브라우저 페이지 소스를 확인해주세요!',
+        title: '브라우저에서 페이지 소스를 확인해주세요!',
         description: 'this code show you how to use react server side rendering',
       }
       return res(response)
     }, 100)
   })
-  serverSideData[HOME_API_KEY] = JSON.stringify(data)
+  serverSideData[POST_API_KEY] = JSON.stringify(data)
   serverSideData[SEO] = JSON.stringify({
     title: {
       '/': 'Home Page',
@@ -36,7 +36,7 @@ export default async function renderHome(url: string, req: Request, res: Respons
   const webExtractor = new ChunkExtractor({ statsFile: webStats })
   const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats })
 
-  let extractor = process.env.NODE_ENV === 'production' ? webExtractor : nodeExtractor
+  const extractor = process.env.NODE_ENV === 'production' ? webExtractor : nodeExtractor
   const jsx = extractor.collectChunks(
     <SSRProvider data={serverSideData}>
       <StaticRouter location={url}>

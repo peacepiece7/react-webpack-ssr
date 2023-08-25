@@ -19,6 +19,7 @@ const getConfig = (target) => {
     mode: devMode ? 'development' : 'production',
     name: target,
     target,
+    devtool: devMode ? 'inline-source-map' : false,
     entry: getEntryPoint(target),
     output: {
       path: path.resolve(__dirname, `dist/${target}`),
@@ -46,9 +47,6 @@ const getConfig = (target) => {
       target === 'web'
         ? [new webpack.HotModuleReplacementPlugin(), new LoadablePlugin(), new MiniCssExtractPlugin()]
         : [new LoadablePlugin(), new MiniCssExtractPlugin()],
-
-    // node환경에서 npm pacakge는 제외하지만, node_modules/@loadable/component는 서버에서 사용되기 때문에 제외하지 않음
-    externals: target === 'node' ? ['@loadable/component', webpackNodeExternals()] : undefined,
   }
 }
 
