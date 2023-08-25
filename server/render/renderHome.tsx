@@ -1,25 +1,21 @@
+import React from 'react'
 import type { Request, Response } from 'express'
 import axios from 'axios'
-import React from 'react'
-
-import { renderToPipeableStream, renderToReadableStream } from 'react-dom/server'
+import path from 'path'
+import { ChunkExtractor } from '@loadable/server'
+import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom/server'
-import { ABORT_DELAY, HOME_API_KEY, HOME_RPOMISE_API_KEY } from '../../constants'
-import { wrapPromise } from '../../utils'
-
+import { HOME_API_KEY, HOME_RPOMISE_API_KEY } from '../../constants'
+import { normalizeAssets, wrapPromise } from '../../utils'
 import App from '../../src/App'
 import { SSRProvider } from '../../src/context/ssr'
 
 export default async function renderHome(url: string, req: Request, res: Response) {
-  res.socket?.on('error', (error) => console.error(error))
+  // res.socket?.on('error', (error) => console.error(error))
 
-  let didError = false
-
-  const assets = {
-    'main.js': '/main.js',
-    'main.css': '/main.css',
-  }
-
+  let serverSideData: {
+    [key: string]: unknown
+  } = {}
   // todo : RSC 전략 필요 (클라이언트에서 하이드레이션 막아야함..)
   const postPromise = new Promise((res) => {
     setTimeout(() => {
@@ -31,7 +27,7 @@ export default async function renderHome(url: string, req: Request, res: Respons
           }
         }),
       )
-    }, ABORT_DELAY - 1000)
+    }, 8000)
   })
 
   const homeData: { title: string; description: string } = await new Promise((res) => {
@@ -48,75 +44,46 @@ export default async function renderHome(url: string, req: Request, res: Respons
       return res(homeData)
     }, 100)
   })
-  let serverSideData: {
-    [key: string]: unknown
-  } = {}
   serverSideData[HOME_API_KEY] = JSON.stringify(homeData)
   serverSideData[HOME_RPOMISE_API_KEY] = wrapPromise(postPromise)
 
   // todo : crawler 처리
   let isCrawler = false
+  const webStats = path.resolve(__dirname, './web/loadable-stats.json')
+  const nodeStats = path.resolve(__dirname, './node/loadable-stats.json')
 
-  const stream = renderToPipeableStream(
+  const webExtractor = new ChunkExtractor({ statsFile: webStats })
+  const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats })
+
+  // webpack-dev-middleware SSR https://www.npmjs.com/package/webpack-dev-middleware#server-side-rendering
+  // SSR시 HMR를 사용한다면, script를 변경해서 보낼 수 있음. 다만 main.js, main.css에 추가로 업데이트 파일을 보내는 형식엔 맞지 않음
+
+  // * webExtractor를 사용하면 HMR시 not match ssr html됨 ("node"는 HMR시 변경되지 않게 설정했기 떄문에 괜찮음)
+  let extractor = process.env.NODE_ENV === 'production' ? webExtractor : nodeExtractor
+  const jsx = extractor.collectChunks(
     <SSRProvider data={serverSideData}>
-      <html lang="en">
-        <head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="icon" type="image/png" href="/favicon.ico" />
-          <link rel="stylesheet" href={assets['main.css']} />
-          <title>{`test code!`}</title>
-          <meta name="description" content={`code for test!`} />
-        </head>
-        <body>
-          <noscript
-            dangerouslySetInnerHTML={{
-              __html: `<b>Enable JavaScript to run this app.</b>`,
-            }}
-          />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `assetManifest = ${JSON.stringify(assets)};`,
-            }}
-          />
-          {(serverSideData as object) && (
-            <script id="__SERVER_DATA__" type="application/json">
-              {JSON.stringify(serverSideData)}
-            </script>
-          )}
-        </body>
-        <div id="root">
-          <StaticRouter location={url}>
-            <App />
-          </StaticRouter>
-        </div>
-      </html>
+      <StaticRouter location={url}>
+        <App />
+      </StaticRouter>
     </SSRProvider>,
-    {
-      bootstrapScripts: [assets['main.js']],
-      onShellReady() {
-        if (isCrawler) return
-        // Streaming이 시작 되기전 에러가 발생한다면 이 곳에서 error code를 접근합니다.
-        res.statusCode = didError ? 500 : 200
-        // 한글을 사용하기 떄문에 utf-8로 Content-type을 설정합니다.
-        res.setHeader('Content-type', 'text/html;charset=UTF-8')
-        stream.pipe(res)
-      },
-      onAllReady() {
-        if (!isCrawler) return
-        // If you don't want streaming, use this instead of onShellReady.
-        // This will fire after the entire page content is ready.
-        // You can use this for crawlers or static generation.
-        res.statusCode = didError ? 500 : 200
-        res.setHeader('Content-type', 'text/html;charset=UTF-8')
-        stream.pipe(res)
-      },
-      onError(err) {
-        didError = true
-        console.error(err)
-      },
-    },
   )
-  // 충분한 시간이(현제 10초) 지나면 SSR을 포기하고 CSR으로 전환합니다.
-  setTimeout(() => stream.abort(), ABORT_DELAY)
+
+  const html = renderToString(jsx)
+
+  // res.set('content-type', 'text/html')
+  // prettier-ignore
+  res.send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, user-scalable=no">
+<meta charSet="utf-8" />
+${webExtractor.getLinkTags()}
+${webExtractor.getStyleTags()}
+</head>
+<body>
+<div id="root">${html}</div>
+<script id="__SERVER_DATA__" type="application/json">${JSON.stringify(serverSideData)}</script>
+${webExtractor.getScriptTags()}
+</body>
+</html>`)
 }

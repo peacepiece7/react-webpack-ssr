@@ -1,11 +1,21 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
+import loadable from '@loadable/component'
+const Layout = loadable(() => import('./components/Layout'))
+const Home = loadable(() => import('./pages/Home'))
+const Detail = loadable(() => import('./pages/Detail'))
+
+// import Home from './pages/Home'
+// import Detail from './pages/Detail'
+// import Layout from './components/Layout'
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />}></Route>
+      <Route path="/" element={<Layout />}>
+        <Route path="/" element={<Home />}></Route>
+        <Route path="/detail" element={<Detail />}></Route>
+      </Route>
     </Routes>
   )
 }

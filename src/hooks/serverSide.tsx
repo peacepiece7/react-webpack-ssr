@@ -15,7 +15,7 @@ export default function useServerSide() {
   const ctx = useContext(ServerSideContext)
   const serverData = ctx[HOME_RPOMISE_API_KEY] as PostPromise
   if (typeof window === 'undefined') {
-    return serverData.read()
+    return serverData?.read()
   }
   return dummyData
 }

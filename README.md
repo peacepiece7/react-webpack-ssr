@@ -1,4 +1,5 @@
-# react webpack ssr (1.0.0)
+# react webpack ssr (2.0.0)
+
 
 ## 목적
 
@@ -11,34 +12,36 @@
 ### Developmenet
 
 ```bash
-# 개발 서버 번들링 및 감시
-npm run watch:server
+# Transpile to development mode
+npm run build:dev
 
-# react apllication 번들링 및 감시
-npm run watch:client
-
-# 개발 서버 실행
+# Run development server
 npm run dev
 ```
 
 ### Production
 
 ```bash
-# 번들링
-npm run build
+# Transpile to production mode
+npm run build:prod
 
-# 서버 실행
+# Run production server
+
+## with node
 npm run start
 
-# 서버 프로세스 종료
+## with pm2
+npm run start:pm2
+
+## Delete process (pm2)
 npm run del
 ```
 
 ### 이슈
 
-### HMR 미적용
+### HMR 적용 (2023.08.25)
 
-Webpack Hot Module Replacement를 구현하지 않았습니다.
+JavaScript, CSS(tailwind)의 HMR가 적용되었습니다.
 
 ### RSC 미적용
 
@@ -46,8 +49,8 @@ Webpack Hot Module Replacement를 구현하지 않았습니다.
 
 - 서버 컴포넌트로 동작이 되어야하는 컴포넌트까지 클라이언트에서 hydration되는 문제가 있습니다.
 
-### Webpack 파편화
+### Webpack 파편화 해결 (2023.08.25)
 
-에러 핸들링을 위해 최대한 webpack을 쪼개놨습니다.
+디버깅을 위해 나눠 둔 webpack 설정 파일을 두 개로 줄였습니다.
 
-개발 시 프로세스를 최소 3개나 띄워야하는 불편함이 있습니다.
+HMR가 적용되면서 webpack watch 모드를 사용하지 않아도 되도록 변경되었습니다.

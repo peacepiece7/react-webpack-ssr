@@ -1,30 +1,36 @@
 const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const webpackNodeExternals = require('webpack-node-externals')
+const LoadablePlugin = require('@loadable/webpack-plugin')
 
-module.exports = {
-  target: 'node',
-  mode: process.env.NODE_ENV ?? 'development',
-  devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'inline-source-map',
-  resolve: {
-    // ? server에서 tsx, jsx를 다루는 경우가 생길지 확인해야함
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
-  },
-  entry: {
-    index: path.resolve(__dirname, 'server', 'index.ts'),
-    // main: path.resolve(__dirname, 'src', 'index.tsx'),
-  },
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js',
-  },
-  module: {
-    rules: [
-      {
-        test: /\.jsx?$|\.tsx?$/,
-        use: 'babel-loader',
-        exclude: /node_modules/,
-      },
-    ],
-  },
-  externals: [webpackNodeExternals()],
+module.exports = (e, r) => {
+  return {
+    target: 'node',
+    node: false, // it enables '__dirname' in files. If is not, '__dirname' always return '/'.
+    mode: r.mode,
+    devtool: r.mode ? false : 'inline-source-map',
+    entry: {
+      index: path.resolve(__dirname, 'server', 'index.ts'),
+    },
+    output: {
+      path: path.resolve(__dirname, './dist'),
+      filename: '[name].js',
+      chunkFilename: '[name].js',
+    },
+    module: {
+      rules: [
+        {
+          test: /\.jsx?$|\.tsx?$/,
+          use: 'babel-loader',
+        },
+      ],
+    },
+    resolve: {
+      extensions: ['.js', '.ts', '.tsx', '.jsx'],
+    },
+    // https://webpack.kr/configuration/resolve/#resolvefallback (webpackNodeExterals()를 사용하지 않을 경우 직접 polyfill)
+    externals: [webpackNodeExternals()],
+    // plugins: [new LoadablePlugin(), , new MiniCssExtractPlugin()],
+    // externals: ['@loadable/component', webpackNodeExternals()],
+  }
 }
