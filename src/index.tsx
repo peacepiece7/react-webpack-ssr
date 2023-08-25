@@ -17,7 +17,8 @@ loadableReady(() => {
 
 // https://webpack.kr/api/hot-module-replacement/
 if (module.hot) {
-  module.hot.accept()
-  document.querySelector('#root > *')?.remove()
-  // if (process.env.NODE_ENV === 'development') {}
+  if (process.env.NODE_ENV === 'development') {
+    module.hot.accept()
+    document.querySelector('#root > *')?.remove()
+  }
 }
