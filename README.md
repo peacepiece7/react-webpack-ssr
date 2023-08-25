@@ -1,4 +1,4 @@
-# react webpack ssr (2.0.0)
+# react webpack ssr
 
 
 ## 목적
