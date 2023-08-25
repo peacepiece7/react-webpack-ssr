@@ -12,7 +12,7 @@ export default function Layout() {
           Detail
         </Link>
       </div>
-      <Outlet></Outlet>
+      <Outlet />
     </div>
   )
 }
