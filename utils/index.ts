@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs'
-import { NextFunction } from 'express'
+import type { NextFunction } from 'express'
 import { API_DELAY } from '../constants'
+import isObject from 'is-object'
 
 export function handleErrors(fn: (req: Request, res: Response) => Promise<unknown>) {
   return async function (req: Request, res: Response, next: NextFunction) {
@@ -52,13 +53,13 @@ export function wrapPromise(promise: Promise<unknown>) {
 
   const suspender = promise.then(
     (res) => {
-      console.log('Suspender Success :')
+      console.log('Suspense Success')
       status = 'success'
       response = res
     },
     // rejected case
     (err) => {
-      console.log('Suspender Rejected :')
+      console.log('Suspense Failure')
       status = 'error'
       response = err
     },
@@ -96,4 +97,12 @@ export const resolvablePromise = () => {
   ;(promise as any).resolve = resolve
   ;(promise as any).reject = reject
   return promise
+}
+
+// * string to string[]
+export const normalizeAssets = <T extends string | string[]>(assets: T): string[] => {
+  if (isObject(assets)) {
+    return Object.values(assets)
+  }
+  return Array.isArray(assets) ? assets : [assets]
 }
