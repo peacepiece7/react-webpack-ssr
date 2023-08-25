@@ -11,10 +11,22 @@ export default function Home() {
         <h1>Home Page</h1>
         <h1 className="text-sky-900">Count : {count}</h1>
         <div>
-          <button className="mr-4" onClick={() => setCount((prev) => ++prev)}>
+          <button
+            className="mr-12"
+            onClick={() => {
+              console.log('Incrementing count')
+              setCount((prev) => ++prev)
+            }}
+          >
             Increment
           </button>
-          <button className="mr-4" onClick={() => setCount((prev) => --prev)}>
+          <button
+            className="mr-12"
+            onClick={() => {
+              console.log('Decrement count')
+              setCount((prev) => --prev)
+            }}
+          >
             Decrement
           </button>
         </div>

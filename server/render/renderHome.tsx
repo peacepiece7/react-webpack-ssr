@@ -6,12 +6,12 @@ import { ChunkExtractor } from '@loadable/server'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom/server'
 import { HOME_API_KEY, HOME_RPOMISE_API_KEY } from '../../constants'
-import { wrapPromise } from '../../utils'
+import { normalizeAssets, wrapPromise } from '../../utils'
 import App from '../../src/App'
 import { SSRProvider } from '../../src/context/ssr'
 
 export default async function renderHome(url: string, req: Request, res: Response) {
-  res.socket?.on('error', (error) => console.error(error))
+  // res.socket?.on('error', (error) => console.error(error))
 
   // todo : RSC 전략 필요 (클라이언트에서 하이드레이션 막아야함..)
   const postPromise = new Promise((res) => {
@@ -24,7 +24,7 @@ export default async function renderHome(url: string, req: Request, res: Respons
           }
         }),
       )
-    }, 100)
+    }, 8000)
   })
 
   const homeData: { title: string; description: string } = await new Promise((res) => {
@@ -45,15 +45,22 @@ export default async function renderHome(url: string, req: Request, res: Respons
   let serverSideData: {
     [key: string]: unknown
   } = {}
+
   serverSideData[HOME_API_KEY] = JSON.stringify(homeData)
   serverSideData[HOME_RPOMISE_API_KEY] = wrapPromise(postPromise)
 
   // todo : crawler 처리
   let isCrawler = false
   const webStats = path.resolve(__dirname, './web/loadable-stats.json')
+  const nodeStats = path.resolve(__dirname, './node/loadable-stats.json')
 
   const webExtractor = new ChunkExtractor({ statsFile: webStats })
+  const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats })
 
+  // webpack-dev-middleware SSR https://www.npmjs.com/package/webpack-dev-middleware#server-side-rendering
+  // SSR시 HMR를 사용한다면, script를 변경해서 보낼 수 있음. 다만 main.js, main.css에 추가로 업데이트 파일을 보내는 형식엔 맞지 않음
+
+  // * webExtractor를 사용하면 HMR시 not match ssr html됨 ("node"는 HMR시 변경되지 않게 설정했기 떄문에 괜찮음)
   const jsx = webExtractor.collectChunks(
     <SSRProvider data={serverSideData}>
       <StaticRouter location={url}>
@@ -64,13 +71,12 @@ export default async function renderHome(url: string, req: Request, res: Respons
 
   const html = renderToString(jsx)
 
-  res.set('content-type', 'text/html')
+  // res.set('content-type', 'text/html')
   // prettier-ignore
   res.send(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta name="viewport" content="width=device-width, user-scalable=no">
-<meta name="google" content="notranslate">
 <meta charSet="utf-8" />
 ${webExtractor.getLinkTags()}
 ${webExtractor.getStyleTags()}
