@@ -1,11 +1,11 @@
 {
   "scripts": {
-    "build:dev:server": "webpack --config webpack.server.config.js --mode development --progress --profile",
-    "build:dev:client": "webpack --config webpack.client.config.js --mode development --progress --profile",
-    "build:dev": "cross-env NODE_ENV=development node ./scripts/rm.js && npm run build:dev:client && npm run build:dev:server",
-    "build:prod:server": "webpack --config webpack.server.config.js --mode production --progress --profile",
-    "build:prod:client": "webpack --config webpack.client.config.js --mode production --progress --profile",
-    "build:prod": "cross-env NODE_ENV=production node ./scripts/rm.js && npm run build:prod:client && npm run build:prod:server",
+    "build:dev:server": "cross-env NODE_ENV=development webpack --config webpack.server.config.js --mode development --progress --profile",
+    "build:dev:client": "cross-env NODE_ENV=development webpack --config webpack.client.config.js --mode development --progress --profile",
+    "build:dev": "node ./scripts/rm.js && npm run build:dev:client && npm run build:dev:server",
+    "build:prod:server": "cross-env NODE_ENV=production webpack --config webpack.server.config.js --mode production --progress --profile",
+    "build:prod:client": "cross-env NODE_ENV=production webpack --config webpack.client.config.js --mode production --progress --profile",
+    "build:prod": "node ./scripts/rm.js && npm run build:prod:client && npm run build:prod:server",
     "dev": "cross-env NODE_ENV=development node ./dist/index.js",
     "dev:pm2": "pm2 start ./ecosystem.config.js --only dev-server --env development",
     "start": "cross-env NODE_ENV=production node ./dist/index.js",
