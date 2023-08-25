@@ -1,10 +1,10 @@
 import express from 'express'
-import renderHome from '../render/renderHome'
+import render from '../render/render'
 
 const router = express.Router()
 
 router.get('/', (req, res) => {
-  return renderHome(req.url, req, res)
+  return render(req.url, req, res)
 })
 
 export default router

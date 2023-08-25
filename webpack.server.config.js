@@ -1,14 +1,12 @@
 const path = require('path')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const webpackNodeExternals = require('webpack-node-externals')
-const LoadablePlugin = require('@loadable/webpack-plugin')
 
 module.exports = (e, r) => {
   return {
     target: 'node',
     node: false, // it enables '__dirname' in files. If is not, '__dirname' always return '/'.
     mode: r.mode,
-    devtool: r.mode ? false : 'inline-source-map',
+    devtool: r.mode === 'production' ? false : 'inline-source-map',
     entry: {
       index: path.resolve(__dirname, 'server', 'index.ts'),
     },
@@ -28,9 +26,17 @@ module.exports = (e, r) => {
     resolve: {
       extensions: ['.js', '.ts', '.tsx', '.jsx'],
     },
-    // https://webpack.kr/configuration/resolve/#resolvefallback (webpackNodeExterals()를 사용하지 않을 경우 직접 polyfill)
     externals: [webpackNodeExternals()],
-    // plugins: [new LoadablePlugin(), , new MiniCssExtractPlugin()],
-    // externals: ['@loadable/component', webpackNodeExternals()],
   }
+}
+const r = {
+  entry: {
+    index: path.resolve(__dirname, 'server', 'index.ts'),
+  },
+  output: {
+    path: path.resolve(__dirname, './dist'),
+    filename: '[name].js',
+    chunkFilename: '[name].js',
+  },
+  externals: [webpackNodeExternals()],
 }
