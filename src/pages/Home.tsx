@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import SSRPost from '../components/SSRPost'
-import { HOME_API_KEY } from '../../constants'
 
 export default function Home() {
   const [count, setCount] = useState(0)
@@ -33,10 +32,7 @@ export default function Home() {
       </div>
       <section>
         <h1 className="text-3xl">Server Side Rendering!</h1>
-        <SSRPost key={HOME_API_KEY} />
-      </section>
-      <section>
-        <h1 className="text-3xl">Server Component</h1>
+        <SSRPost />
       </section>
     </>
   )
