@@ -3,10 +3,9 @@ const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const LoadablePlugin = require('@loadable/webpack-plugin')
 const webpackNodeExternals = require('webpack-node-externals')
-const rimraf = require('rimraf')
 
 const devMode = process.env.NODE_ENV !== 'production'
-const hotMiddlewareScript = `webpack-hot-middleware/client?name=web&reload=true`
+const hotMiddlewareScript = `webpack-hot-middleware/client?name=web&log=false&reload=true`
 
 const getEntryPoint = (target) => {
   if (target === 'node') {
@@ -18,7 +17,7 @@ const getEntryPoint = (target) => {
 
 const getConfig = (target) => {
   return {
-    mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+    mode: devMode ? 'development' : 'production',
     name: target,
     target,
     entry: getEntryPoint(target),
@@ -31,25 +30,26 @@ const getConfig = (target) => {
     module: {
       rules: [
         {
-          test: /\.jsx?$|\.tsx?$/,
-          use: 'babel-loader',
-        },
-        {
           test: /\.css?$/,
           exclude: [],
-          use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+          use: [devMode ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+        },
+        {
+          test: /\.jsx?$|\.tsx?$/,
+          use: 'babel-loader',
         },
       ],
     },
     resolve: {
-      extensions: ['.ts', '.tsx', '.js', '.jsx'],
+      extensions: ['.js', '.ts', '.tsx', '.jsx'],
     },
     plugins:
       target === 'web'
-        ? [new LoadablePlugin(), new MiniCssExtractPlugin(), new webpack.HotModuleReplacementPlugin()]
+        ? [new webpack.HotModuleReplacementPlugin(), new LoadablePlugin(), new MiniCssExtractPlugin()]
         : [new LoadablePlugin(), new MiniCssExtractPlugin()],
 
-    // node환경에서 npm pacakge는 제외하지만, node_modules/@loadable/component는 제외하지 않음
+    // node환경에서 npm pacakge는 제외하지만, node_modules/@loadable/component는 서버에서 사용되기 때문에 제외하지 않음
+    // todo : web에서 webpackNodeExternals()를 사용할 경우 파일용량 확인하기
     externals: target === 'node' ? ['@loadable/component', webpackNodeExternals()] : undefined,
   }
 }

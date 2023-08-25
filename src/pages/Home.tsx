@@ -9,7 +9,7 @@ export default function Home() {
     <>
       <div className="flex">
         <h1>Home Page</h1>
-        <h1 className="text-sky-900">Count : {count}</h1>
+        <h1 className="text-red-700">Count : {count}</h1>
         <div>
           <button
             className="mr-12"

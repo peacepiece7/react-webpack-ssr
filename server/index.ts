@@ -12,7 +12,7 @@ if (process.env.NODE_ENV !== 'production') {
   console.log('개발 환경입니다. webpack-dev-middleware를 사용합니다.')
   const webpack = require('webpack')
   const webpackConfig = require('../webpack.client.config').map((config: any) => {
-    // 빌드할 때 dist => dist/dist로 변경됨
+    // 빌드할 때 dist => dist/dist로 변경됨 (dist\\ => window, dist/ => mac, unix)
     config.output.path = config.output.path.replace('dist/dist/', 'dist/').replace('dist\\dist\\', 'dist\\')
     return config
   })
@@ -25,7 +25,6 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(
     webpackDevMiddleware(compiler, {
       writeToDisk: true,
-      noInfo: true,
       publicPath: webpackConfig[0].output.publicPath,
     }),
   )

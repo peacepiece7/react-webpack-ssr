@@ -2,10 +2,8 @@ const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const webpackNodeExternals = require('webpack-node-externals')
 const LoadablePlugin = require('@loadable/webpack-plugin')
-const rimraf = require('rimraf')
 
 module.exports = (e, r) => {
-  // rimraf.sync(path.resolve(__dirname, 'dist-server'))
   return {
     target: 'node',
     node: false, // it enables '__dirname' in files. If is not, '__dirname' always return '/'.
@@ -28,8 +26,9 @@ module.exports = (e, r) => {
       ],
     },
     resolve: {
-      extensions: ['.ts', '.tsx', '.js', '.jsx'],
+      extensions: ['.js', '.ts', '.tsx', '.jsx'],
     },
+    // https://webpack.kr/configuration/resolve/#resolvefallback (webpackNodeExterals()를 사용하지 않을 경우 직접 polyfill)
     externals: [webpackNodeExternals()],
     // plugins: [new LoadablePlugin(), , new MiniCssExtractPlugin()],
     // externals: ['@loadable/component', webpackNodeExternals()],

@@ -13,6 +13,9 @@ import { SSRProvider } from '../../src/context/ssr'
 export default async function renderHome(url: string, req: Request, res: Response) {
   // res.socket?.on('error', (error) => console.error(error))
 
+  let serverSideData: {
+    [key: string]: unknown
+  } = {}
   // todo : RSC 전략 필요 (클라이언트에서 하이드레이션 막아야함..)
   const postPromise = new Promise((res) => {
     setTimeout(() => {
@@ -41,11 +44,6 @@ export default async function renderHome(url: string, req: Request, res: Respons
       return res(homeData)
     }, 100)
   })
-
-  let serverSideData: {
-    [key: string]: unknown
-  } = {}
-
   serverSideData[HOME_API_KEY] = JSON.stringify(homeData)
   serverSideData[HOME_RPOMISE_API_KEY] = wrapPromise(postPromise)
 
@@ -61,7 +59,8 @@ export default async function renderHome(url: string, req: Request, res: Respons
   // SSR시 HMR를 사용한다면, script를 변경해서 보낼 수 있음. 다만 main.js, main.css에 추가로 업데이트 파일을 보내는 형식엔 맞지 않음
 
   // * webExtractor를 사용하면 HMR시 not match ssr html됨 ("node"는 HMR시 변경되지 않게 설정했기 떄문에 괜찮음)
-  const jsx = webExtractor.collectChunks(
+  let extractor = process.env.NODE_ENV === 'production' ? webExtractor : nodeExtractor
+  const jsx = extractor.collectChunks(
     <SSRProvider data={serverSideData}>
       <StaticRouter location={url}>
         <App />
