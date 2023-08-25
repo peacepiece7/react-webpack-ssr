@@ -4,7 +4,8 @@ import path from 'path'
 import { ChunkExtractor } from '@loadable/server'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom/server'
-import { HOME_API_KEY } from '../../constants'
+import { Helmet } from 'react-helmet'
+import { HOME_API_KEY, SEO } from '../../constants'
 import App from '../../src/App'
 import { SSRProvider } from '../../src/context/ssr'
 
@@ -13,22 +14,22 @@ export default async function renderHome(url: string, req: Request, res: Respons
     [key: string]: unknown
   } = {}
 
-  const homeData: { title: string; description: string } = await new Promise((res) => {
+  const data: { title: string; description: string } = await new Promise((res) => {
     setTimeout(() => {
-      const homeData = {
+      const response = {
         title: '브라우저 페이지 소스를 확인해주세요!',
         description: 'this code show you how to use react server side rendering',
-        test: {
-          foo: {
-            bar: 'waldo',
-          },
-        },
       }
-      return res(homeData)
+      return res(response)
     }, 100)
   })
-  serverSideData[HOME_API_KEY] = JSON.stringify(homeData)
-
+  serverSideData[HOME_API_KEY] = JSON.stringify(data)
+  serverSideData[SEO] = JSON.stringify({
+    title: {
+      '/': 'Home Page',
+      '/detail': 'Detail Page',
+    },
+  })
   const webStats = path.resolve(__dirname, './web/loadable-stats.json')
   const nodeStats = path.resolve(__dirname, './node/loadable-stats.json')
 
@@ -45,15 +46,16 @@ export default async function renderHome(url: string, req: Request, res: Respons
   )
 
   const html = renderToString(jsx)
+  const helmet = Helmet.renderStatic()
 
   res.set('content-type', 'text/html')
-
   res.send(`
     <!DOCTYPE html>
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, user-scalable=no">
         <meta charSet="utf-8" />
+        ${helmet.title.toString()}
         ${webExtractor.getLinkTags()}
         ${webExtractor.getStyleTags()}
       </head>
