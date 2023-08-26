@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import { ServerSideContext } from '../context/ssr'
-import { HOME_RPOMISE_API_KEY } from '../../constants'
+import { ServerSideContext } from '@/context/ssr'
+import { HOME_RPOMISE_API_KEY } from '@/constants'
 
 const dummyData = {
   title: 'dummy data',

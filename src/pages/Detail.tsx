@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
-import SSRPost from '../components/SSRPost'
-import useServerSideProps from '../hooks/serverSideProps'
-import { SEO } from '../../constants'
+import SSRPost from '@/components/SSRPost'
+import useServerSideProps from '@/hooks/serverSideProps'
+import { SEO } from '@/constants'
 
 type PageSource = {
   title: {

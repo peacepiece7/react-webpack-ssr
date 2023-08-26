@@ -5,9 +5,9 @@ import { ChunkExtractor } from '@loadable/server'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom/server'
 import { Helmet } from 'react-helmet'
-import { POST_API_KEY, SEO } from '../../constants'
-import App from '../../src/App'
-import { SSRProvider } from '../../src/context/ssr'
+import { POST_API_KEY, SEO } from '@/constants'
+import App from '@/App'
+import { SSRProvider } from '@/context/ssr'
 
 export default async function renderHome(url: string, req: Request, res: Response) {
   let serverSideData: {

@@ -1,6 +1,5 @@
 import { useContext } from 'react'
-import { ServerSideContext } from '../context/ssr'
-
+import { ServerSideContext } from '@/context/ssr'
 import htmlEntitiesDecoder from 'html-entities-decoder'
 
 export default function useServerSideProps(key: string) {
