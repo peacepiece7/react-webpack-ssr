@@ -1,7 +1,7 @@
 import express from 'express'
 import compress from 'compression'
 import path from 'path'
-import render from './render/render'
+import render from '~/render/render'
 
 const PORT = process.env.PORT || 7282
 const app = express()

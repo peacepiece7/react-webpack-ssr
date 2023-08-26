@@ -29,14 +29,3 @@ module.exports = (e, r) => {
     externals: [webpackNodeExternals()],
   }
 }
-const r = {
-  entry: {
-    index: path.resolve(__dirname, 'server', 'index.ts'),
-  },
-  output: {
-    path: path.resolve(__dirname, './dist'),
-    filename: '[name].js',
-    chunkFilename: '[name].js',
-  },
-  externals: [webpackNodeExternals()],
-}

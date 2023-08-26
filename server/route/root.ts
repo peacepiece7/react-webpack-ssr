@@ -1,5 +1,5 @@
 import express from 'express'
-import render from '../render/render'
+import render from '~/render/render'
 
 const router = express.Router()
 
