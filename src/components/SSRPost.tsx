@@ -1,6 +1,6 @@
 import React from 'react'
-import { POST_API_KEY } from '../../constants'
-import useServerSideProps from '../hooks/serverSideProps'
+import { POST_API_KEY } from '@/constants'
+import useServerSideProps from '@/hooks/serverSideProps'
 
 type Post = { title: string; description: string }
 export default function SSRPost() {

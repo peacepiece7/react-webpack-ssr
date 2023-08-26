@@ -2,7 +2,6 @@ const path = require('path')
 const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const LoadablePlugin = require('@loadable/webpack-plugin')
-const webpackNodeExternals = require('webpack-node-externals')
 
 const devMode = process.env.NODE_ENV !== 'production'
 const hotMiddlewareScript = `webpack-hot-middleware/client?name=web&log=false&reload=true`
